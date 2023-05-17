@@ -1,17 +1,9 @@
 import openai
 import streamlit as st
-from tempfile import NamedTemporaryFile
-import tempfile
-# import whisper
-from pydub import AudioSegment
-import pydub
-# from pathlib import Path
 import sys
 sys.path.append('/path/to/ffmpeg')
 import os
-import io
 import numpy as np
-# from scipy.io import wavfile
 import logging
 log = logging.getLogger(__name__)
 
