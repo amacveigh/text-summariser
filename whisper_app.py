@@ -6,6 +6,7 @@ import os
 from text_summarizer.functions import headline
 from text_summarizer.functions import summarize_turbo
 from text_summarizer.functions import transcribe
+from text_summarizer.functions import transcribe_on_web
 from text_summarizer.functions import SEO
 # import whisper
 
@@ -39,7 +40,7 @@ try:
 
   st.button(
       "Transcribe",
-      on_click=transcribe,
+      on_click=transcribe_on_web,
       kwargs={"audio_file": audio_file},
   )
 

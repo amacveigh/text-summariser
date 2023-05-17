@@ -4,6 +4,7 @@ import sys
 sys.path.append('/path/to/ffmpeg')
 import os
 import numpy as np
+import tempfile
 import logging
 log = logging.getLogger(__name__)
 
@@ -50,6 +51,16 @@ def transcribe(audio_file):
         st.session_state["transcribe"] = transcript.text
     except:
         st.write('There was an error =(')
+
+def transcribe_on_web(audio_file):
+    with open(audio_file.name,'wb') as f:
+         f.write(audio_file.getbuffer())
+
+    open_path = open(audio_file.name, "rb")
+        # print("opened")
+    transcript = openai.Audio.transcribe("whisper-1", open_path)
+
+    st.session_state["transcribe"] = transcript.text
         
 
 def summarize_turbo(prompt):
