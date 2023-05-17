@@ -1,5 +1,31 @@
 import openai
 import streamlit as st
+from tempfile import NamedTemporaryFile
+import tempfile
+# import whisper
+from pydub import AudioSegment
+import pydub
+# from pathlib import Path
+import sys
+sys.path.append('/path/to/ffmpeg')
+import os
+import io
+import numpy as np
+# from scipy.io import wavfile
+import logging
+log = logging.getLogger(__name__)
+
+def handle_uploaded_audio_file(uploaded_file):
+    a = pydub.AudioSegment.from_wav(uploaded_file)
+
+    st.write(a.sample_width)
+
+    samples = a.get_array_of_samples()
+    fp_arr = np.array(samples).T.astype(np.float32)
+    fp_arr /= np.iinfo(samples.typecode).max
+    st.write(fp_arr.shape)
+
+    return fp_arr, 22050
 
 def summarize(prompt):
     augmented_prompt = f"summarize this text: {prompt}"
@@ -13,16 +39,23 @@ def summarize(prompt):
     except:
         st.write('There was an error =(')
 
-        
+def save_file(sound_file):
+    # save your sound file in the right folder by following the path
+    with open(os.path.join('audio_files/', sound_file.name),'wb') as f:
+         f.write(sound_file.getbuffer())
+    return sound_file.name
 
 def transcribe(audio_file):
-    read = audio_file.read()
-    file = open(read, "rb")
-    try:
-        text = openai.Audio.transcribe("whisper-1", file).text
-        print(text)
-        st.session_state["transcribe"] = text
-        print(text)
+    log.debug("doing something!")
+    try:  
+        save_file(audio_file)
+        file_path = f'audio_files/{audio_file.name}'
+        print(file_path)
+        open_path = open(file_path, "rb")
+        transcript = openai.Audio.transcribe("whisper-1", open_path)
+        print('done')
+        # print(transcript.text)
+        st.session_state["transcribe"] = transcript.text
     except:
         st.write('There was an error =(')
         
