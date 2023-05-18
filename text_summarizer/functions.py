@@ -61,10 +61,23 @@ def transcribe_on_web(audio_file):
     transcript = openai.Audio.transcribe("whisper-1", open_path)
 
     st.session_state["transcribe"] = transcript.text
+
+def translate(prompt):
+    try:
+        st.session_state["transcribe"] = openai.ChatCompletion.create(
+            model='gpt-3.5-turbo',
+            messages=[
+            {"role": "user", "content": f"Please translate the following text into English {prompt}"}],
+            max_tokens=400,
+            temperature=0.1,
+        )["choices"][0]["message"]["content"]
+        
+    except:
+        st.write('There was an error =(')
         
 
 def summarize_turbo(prompt):
-    augmented_prompt = [{"role": "user", "content": f"""You are an expert journalist. Based on the provided text below, generate a short summary.
+    augmented_prompt = [{"role": "user", "content": f"""Based on the provided text below, generate a short summary. Also give bullet points covering the main themes of the text.
 
        Text: ###
        {prompt}

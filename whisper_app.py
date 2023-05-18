@@ -8,6 +8,7 @@ from text_summarizer.functions import summarize_turbo
 from text_summarizer.functions import transcribe
 from text_summarizer.functions import transcribe_on_web
 from text_summarizer.functions import SEO
+from text_summarizer.functions import translate
 # import whisper
 
 try:
@@ -24,10 +25,13 @@ try:
 
   if "seo" not in st.session_state:
       st.session_state["seo"] = ""
+
+  if "translate" not in st.session_state:
+      st.session_state["translate"] = ""
   
   st.title("AI Audio Pipeline")
   
-  audio_file = st.file_uploader("Upload an audio file", type=["wav", "mp3", "m4a"])
+  audio_file = st.file_uploader("Upload an audio file", type=["wav", "mp3", "m4a","mp4"])
 #   model = whisper.load_model("base")
 
   if audio_file is not None:
@@ -45,12 +49,19 @@ try:
   )
 
   input_text = st.text_area(label="Enter full text:", value=st.session_state["transcribe"], height=250)
-
+  
   st.button(
       "Summarise",
       on_click=summarize_turbo,
       kwargs={"prompt": input_text},
   )
+
+  st.button(
+      "Translate",
+      on_click=translate,
+      kwargs={"prompt": input_text},
+  )
+
   output_text = st.text_area(label="Summarized text:", value=st.session_state["summary"], height=250)
 
   st.button(
@@ -66,6 +77,7 @@ try:
       kwargs={"prompt": input_text},
   )
   seo_text = st.text_area(label="SEO Tags:", value=st.session_state["seo"], height=150)
+
 
 except:
   st.write('There was an error =(')
