@@ -9,6 +9,7 @@ from text_summarizer.functions import transcribe
 from text_summarizer.functions import transcribe_on_web
 from text_summarizer.functions import SEO
 from text_summarizer.functions import translate
+from text_summarizer.functions import gen_article
 # import whisper
 
 try:
@@ -22,6 +23,9 @@ try:
 
   if "title" not in st.session_state:
       st.session_state["title"] = ""
+  
+  if "gen_article" not in st.session_state:
+      st.session_state["gen_article"] = ""
 
   if "seo" not in st.session_state:
       st.session_state["seo"] = ""
@@ -72,12 +76,18 @@ try:
   title_text = st.text_area(label="Title:", value=st.session_state["title"], height=150)
 
   st.button(
+      "Generate Article Example",
+      on_click=gen_article,
+      kwargs={"prompt": input_text},
+  )
+  article_text = st.text_area(label="Article Generation", value=st.session_state["gen_article"], height=350)
+
+  st.button(
       "Generate SEO Tags",
       on_click=SEO,
       kwargs={"prompt": input_text},
   )
   seo_text = st.text_area(label="SEO Tags:", value=st.session_state["seo"], height=150)
-
 
 except:
   st.write('There was an error =(')

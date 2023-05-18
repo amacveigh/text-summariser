@@ -93,6 +93,23 @@ def summarize_turbo(prompt):
     except:
         st.write('There was an error =(')
 
+def gen_article(prompt):
+    augmented_prompt = [{"role": "user", "content": f"""Based on the provided text below, generate an article with a catchy headline, intorduction summarizing the main points, and several paragraphs.
+
+       Text: ###
+       {prompt}
+       ###
+       """}]
+    try:
+        st.session_state["gen_article"] = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=augmented_prompt,
+            temperature=.7,
+            max_tokens=400,
+        )["choices"][0]["message"]["content"]
+    except:
+        st.write('There was an error =(')
+
 def headline(prompt):
     augmented_prompt = [{"role": "user", "content": f"""You are an expert journalist. Based on the provided text below, generate 5 different SEO friendly titles for a news article.
 
