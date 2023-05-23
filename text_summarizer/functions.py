@@ -68,7 +68,7 @@ def translate(prompt):
             model='gpt-3.5-turbo',
             messages=[
             {"role": "user", "content": f"Please translate the following text into English {prompt}"}],
-            max_tokens=400,
+            max_tokens=700,
             temperature=0.1,
         )["choices"][0]["message"]["content"]
         
@@ -88,7 +88,7 @@ def summarize_turbo(prompt):
             model="gpt-3.5-turbo",
             messages=augmented_prompt,
             temperature=.7,
-            max_tokens=400,
+            max_tokens=700,
         )["choices"][0]["message"]["content"]
     except:
         st.write('There was an error =(')
@@ -105,7 +105,30 @@ def gen_article(prompt):
             model="gpt-3.5-turbo",
             messages=augmented_prompt,
             temperature=.7,
-            max_tokens=400,
+            max_tokens=1000,
+        )["choices"][0]["message"]["content"]
+    except:
+        st.write('There was an error =(')
+
+def gen_article_wireless(prompt):
+    augmented_prompt = [{"role": "user", "content": f"""
+    From the Text below generate an article with the following:
+    1. A catchy headline .
+    2. A word count 500 and 600 words.
+    3. An introduction summarizing the main points
+    4. A sentence with a quote from the Text
+    5. A sub heading and paragraph at the bottom evaluating the emotion in the text
+
+    Text: ###
+    {prompt}
+    ###
+    """}]
+    try:
+        st.session_state["gen_article_wireless"] = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=augmented_prompt,
+            temperature=1,
+            max_tokens=2000,
         )["choices"][0]["message"]["content"]
     except:
         st.write('There was an error =(')
@@ -122,7 +145,7 @@ def headline(prompt):
             model="gpt-3.5-turbo",
             messages=augmented_prompt,
             temperature=.7,
-            max_tokens=400,
+            max_tokens=700,
         )["choices"][0]["message"]["content"]
     except:
         st.write('There was an error =(')

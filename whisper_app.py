@@ -5,7 +5,7 @@ import openai
 import os
 from text_summarizer.functions import headline
 from text_summarizer.functions import summarize_turbo
-from text_summarizer.functions import transcribe
+from text_summarizer.functions import gen_article_wireless
 from text_summarizer.functions import transcribe_on_web
 from text_summarizer.functions import SEO
 from text_summarizer.functions import translate
@@ -32,6 +32,9 @@ try:
 
   if "translate" not in st.session_state:
       st.session_state["translate"] = ""
+
+  if "gen_article_wireless" not in st.session_state:
+      st.session_state["gen_article_wireless"] = ""
   
   st.title("AI Audio Pipeline")
   
@@ -88,6 +91,13 @@ try:
       kwargs={"prompt": input_text},
   )
   seo_text = st.text_area(label="SEO Tags:", value=st.session_state["seo"], height=150)
+
+  st.button(
+      "Wireless Article - from podcast",
+      on_click=gen_article_wireless,
+      kwargs={"prompt": input_text},
+  )
+  wireless = st.text_area(label="Wireless Article : 350-600 words, highlighted quote, emotion evaluation", value=st.session_state["gen_article_wireless"], height=500)
 
 except:
   st.write('There was an error =(')
