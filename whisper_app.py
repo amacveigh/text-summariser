@@ -93,11 +93,11 @@ try:
   seo_text = st.text_area(label="SEO Tags:", value=st.session_state["seo"], height=150)
 
   st.button(
-      "Wireless Article - from podcast",
+      "Broadcast Article",
       on_click=gen_article_wireless,
       kwargs={"prompt": input_text},
   )
-  wireless = st.text_area(label="Wireless Article : 350-600 words, highlighted quote, emotion evaluation", value=st.session_state["gen_article_wireless"], height=500)
+  wireless = st.text_area(label="Broadcast Article : 350-600 words, highlighted quote, emotion evaluation", value=st.session_state["gen_article_wireless"], height=500)
 
 except:
   st.write('There was an error =(')
