@@ -131,7 +131,13 @@ def gen_article_wireless(prompt):
             max_tokens=2000,
         )["choices"][0]["message"]["content"]
     except:
-        st.write('There was an error =(')
+        st.session_state["gen_article_wireless"] = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=augmented_prompt,
+            temperature=1,
+            max_tokens=1000,
+        )["choices"][0]["message"]["content"]
+
 
 def headline(prompt):
     augmented_prompt = [{"role": "user", "content": f"""You are an expert journalist. Based on the provided text below, generate 5 different SEO friendly titles for a news article.
