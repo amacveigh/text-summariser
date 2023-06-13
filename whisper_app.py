@@ -10,6 +10,7 @@ from text_summarizer.functions import transcribe_on_web
 from text_summarizer.functions import SEO
 from text_summarizer.functions import translate
 from text_summarizer.functions import gen_article
+from text_summarizer.functions import transcribe_force_eng
 # import whisper
 
 try:
@@ -55,6 +56,12 @@ try:
       kwargs={"audio_file": audio_file},
   )
 
+  st.button(
+      "Transcribe Force English",
+      on_click=transcribe_force_eng,
+      kwargs={"audio_file": audio_file},
+  )
+
   input_text = st.text_area(label="Enter full text:", value=st.session_state["transcribe"], height=250)
   
   st.button(
@@ -71,10 +78,12 @@ try:
 
   output_text = st.text_area(label="Summarized text:", value=st.session_state["summary"], height=250)
 
+  key_words = st.text_input(label="Headline Tailoring:", value="EG: 'Be lighthearted/funny/serious' , 'Use the word ____' , 'Use alliteration.'", max_chars=None, key=None, type="default", help=None, autocomplete=None, on_change=None, args=None, kwargs=None, label_visibility="visible")
+
   st.button(
       "Generate Suggested Titles",
       on_click=headline,
-      kwargs={"prompt": input_text},
+      kwargs={"prompt": input_text, "key_words": key_words},
   )
   title_text = st.text_area(label="Title:", value=st.session_state["title"], height=150)
 
