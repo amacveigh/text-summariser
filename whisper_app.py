@@ -11,13 +11,23 @@ from text_summarizer.functions import SEO
 from text_summarizer.functions import translate
 from text_summarizer.functions import gen_article
 from text_summarizer.functions import transcribe_force_eng
+from text_summarizer.functions import americanize
+# from text_summarizer import americanisms
+import json
 # import whisper
+f = open('text_summarizer/americanisms.json')
+# returns JSON object as 
+# a dictionary
+americanisms = json.load(f)
 
 try:
   openai.api_key = os.getenv('OPENAI_TURBO_KEY')
   
   if "summary" not in st.session_state:
       st.session_state["summary"] = ""
+
+  if "americanize" not in st.session_state:
+      st.session_state["americanize"] = ""
 
   if "transcribe" not in st.session_state:
       st.session_state["transcribe"] = ""
@@ -62,8 +72,16 @@ try:
       kwargs={"audio_file": audio_file},
   )
 
+
+
   input_text = st.text_area(label="Enter full text:", value=st.session_state["transcribe"], height=250)
   
+  st.button(
+      "Convert to American English",
+      on_click=americanize,
+      kwargs={"string": input_text, "word_list": americanisms},
+  )
+
   st.button(
       "Summarise",
       on_click=summarize_turbo,
@@ -107,6 +125,11 @@ try:
       kwargs={"prompt": input_text},
   )
   wireless = st.text_area(label="Broadcast Article : 350-600 words, highlighted quote, emotion evaluation", value=st.session_state["gen_article_wireless"], height=500)
+  
+
+#   americanized = st.text_area(label="UK to US Localisation", value=st.session_state["americanize"], height=500)
+
+
 
 except:
   st.write('There was an error =(')
