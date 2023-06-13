@@ -38,6 +38,18 @@ def save_file(sound_file):
          f.write(sound_file.getbuffer())
     return sound_file.name
 
+def americanize(string, word_list):
+    for british_spelling, american_spelling in word_list.items():
+        string = string.replace(british_spelling, american_spelling)
+  
+    st.session_state["transcribe"] = string
+
+# def americanize(string, word_list):
+#     for british_spelling, american_spelling in word_list.items():
+#         string = string.replace(british_spelling, american_spelling)
+  
+#     st.session_state["americanize"] = string
+
 def transcribe(audio_file):
     log.debug("doing something!")
     try:  
