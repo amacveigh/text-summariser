@@ -8,17 +8,17 @@ import tempfile
 import logging
 log = logging.getLogger(__name__)
 
-def handle_uploaded_audio_file(uploaded_file):
-    a = pydub.AudioSegment.from_wav(uploaded_file)
+# def handle_uploaded_audio_file(uploaded_file):
+#     a = pydub.AudioSegment.from_wav(uploaded_file)
 
-    st.write(a.sample_width)
+#     st.write(a.sample_width)
 
-    samples = a.get_array_of_samples()
-    fp_arr = np.array(samples).T.astype(np.float32)
-    fp_arr /= np.iinfo(samples.typecode).max
-    st.write(fp_arr.shape)
+#     samples = a.get_array_of_samples()
+#     fp_arr = np.array(samples).T.astype(np.float32)
+#     fp_arr /= np.iinfo(samples.typecode).max
+#     st.write(fp_arr.shape)
 
-    return fp_arr, 22050
+#     return fp_arr, 22050
 
 def summarize(prompt):
     augmented_prompt = f"summarize this text: {prompt}"
@@ -60,6 +60,29 @@ def transcribe_on_web(audio_file):
         # print("opened")
     transcript = openai.Audio.transcribe("whisper-1", open_path)
 
+    st.session_state["transcribe"] = transcript.text
+
+# Could change this to dynamic variable in future
+def transcribe_force_eng(audio_file):
+    with open(audio_file.name,'wb') as f:
+         f.write(audio_file.getbuffer())
+    open_path = open(audio_file.name, "rb")
+
+    transcript = openai.Audio.transcribe("whisper-1", open_path,language = "en",temperature=0
+                                         
+                                         )
+
+    # transcript = openai.Audio.transcribe(
+    # model = "whisper-1",
+    # file = open_path,
+    # options = {
+    # "language" : "en", # this is ISO 639-1 format as recommended in the docs
+    # # "response_format" : "json",
+    # "fp16":"False", 
+    # "verbose":"True",
+    # "temperature" : "0"
+    # }
+    # )
     st.session_state["transcribe"] = transcript.text
 
 def translate(prompt):
@@ -139,8 +162,9 @@ def gen_article_wireless(prompt):
         )["choices"][0]["message"]["content"]
 
 
-def headline(prompt):
-    augmented_prompt = [{"role": "user", "content": f"""You are an expert journalist. Based on the provided text below, generate 5 different SEO friendly titles for a news article.
+def headline(prompt,key_words):
+    augmented_prompt = [{"role": "user", "content": f"""
+    Based on the text below suggest 5 headlines. They should be {key_words}
 
        Text: ###
        {prompt}
